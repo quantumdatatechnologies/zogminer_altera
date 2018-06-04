@@ -455,7 +455,7 @@ libzogminer_a_CPPFLAGS = -DMULTICORE -fopenmp -fPIC -DBINARY_OUTPUT -DCURVE_ALT_
 
 libzogminer_a_CXXFLAGS = $(HARDENED_CXXFLAGS) -fwrapv -fno-strict-aliasing
 
-libzogminer_a_LDFLAGS = $(HARDENED_LDFLAGS) -lOpenCL
+libzogminer_a_LDFLAGS = $(HARDENED_LDFLAGS) -lalteracl
 
 libzogminer_a_CPPFLAGS += -DMONTGOMERY_OUTPUT
 

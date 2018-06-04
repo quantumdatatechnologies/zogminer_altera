@@ -42,7 +42,10 @@ xxd -i src/libzogminer/kernels/cl_zogminer_kernel.cl \
 |  sed 's/unsigned/const unsigned/;s/unsigned int/size_t/;s/src_libzogminer_kernels_cl_zogminer_kernel_cl/CL_MINER_KERNEL/;s/_len/_SIZE/'> \
 src/libzogminer/kernels/cl_zogminer_kernel.h
 
+
+
 make "$@" -C ./depends/ V=1 NO_QT=1
 ./autogen.sh
-./configure --prefix="${PREFIX}" --with-gui=no "$HARDENING_ARG" "$LCOV_ARG" CXXFLAGS='-fwrapv -fno-strict-aliasing -g'
+#./configure --prefix="${PREFIX}" --with-gui=no "$HARDENING_ARG" "$LCOV_ARG" CXXFLAGS='-fwrapv -fno-strict-aliasing -g' 
+./configure --prefix=/home/aguha/zcash/zogminer/depends/x86_64-unknown-linux-gnu/ --with-gui=no --enable-hardening '' CXXFLAGS='-I/home/aguha/intelFPGA_pro/17.1/hld/host/include -fwrapv -fno-strict-aliasing -g' LDFLAGS='-L/home/aguha/intelFPGA_pro/17.1/hld/board/a10_ref/linux64/lib -L/home/aguha/intelFPGA_pro/17.1/hld/host/linux64/lib -Wl,--no-as-needed -lalteracl -laltera_a10_ref_mmd -lelf'
 make "$@" V=1

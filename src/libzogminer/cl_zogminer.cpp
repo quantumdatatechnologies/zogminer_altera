@@ -54,7 +54,7 @@ static std::atomic_flag s_logSpin = ATOMIC_FLAG_INIT;
 #endif
 
 // Types of OpenCL devices we are interested in
-#define CL_QUERIED_DEVICE_TYPES (CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR)
+#define CL_QUERIED_DEVICE_TYPES (CL_DEVICE_TYPE_ALL)
 
 // Inject definitions into the kernal source
 static void addDefinition(string& _source, char const* _id, unsigned _value)
@@ -324,8 +324,9 @@ bool cl_zogminer::init(
 
 		if (strncmp("OpenCL 1.0", device_version.c_str(), 10) == 0)
 		{
-			CL_LOG("OpenCL 1.0 is not supported.");
-			return false;
+			/*CL_LOG("OpenCL 1.0 is not supported.");
+			return false;*/
+			m_openclOnePointOne = true;
 		}
 		if (strncmp("OpenCL 1.1", device_version.c_str(), 10) == 0)
 			m_openclOnePointOne = true;
@@ -353,18 +354,26 @@ bool cl_zogminer::init(
 		string code((istreambuf_iterator<char>(kernel_file)), istreambuf_iterator<char>());
 		kernel_file.close();
 #else
-		string code(CL_MINER_KERNEL, CL_MINER_KERNEL + CL_MINER_KERNEL_SIZE);
+		//string code(CL_MINER_KERNEL, CL_MINER_KERNEL + CL_MINER_KERNEL_SIZE);
+		ifstream kernel_file("/home/aguha/zcash/zogminer/src/libzogminer/kernels/cl_zogminer_kernel.aocx");
+		string code((istreambuf_iterator<char>(kernel_file)), istreambuf_iterator<char>());
+		kernel_file.close();
+
 #endif
+
+
 		// create miner OpenCL program
 		cl::Program::Sources sources;
 		sources.push_back({ code.c_str(), code.size() });
+		const vector<cl::Device> fpgas = {device};
+		const cl::Program::Binaries binaries = {pair<const void*, long unsigned>((void*)code.c_str(), code.size())};
 
-		cl::Program program(m_context, sources);
+		cl::Program program(m_context, fpgas, binaries);
 		try
 		{
-			program.build({ device });
-			CL_LOG("Printing program log");
-			CL_LOG(program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device).c_str());
+			//program.build({ device });
+			//CL_LOG("Printing program log");
+			//CL_LOG(program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device).c_str());
 		}
 		catch (cl::Error const&)
 		{
@@ -374,14 +383,18 @@ bool cl_zogminer::init(
 
 		try
 		{
-			for (auto & _kernel : _kernels)
+			for (auto & _kernel : _kernels) {
+			    CL_LOG("Kernel: " << _kernel.c_str());
 				m_zogKernels.push_back(cl::Kernel(program, _kernel.c_str()));
+			}
 		}
 		catch (cl::Error const& err)
 		{
 			CL_LOG("ZOGKERNEL Creation failed: " << err.what() << "(" << err.err() << "). Bailing.");
 			return false;
 		}
+
+
 
 		// TODO create buffer kernel inputs (private variables)
 	  	buf_dbg = cl::Buffer(m_context, CL_MEM_READ_WRITE, dbg_size, NULL, NULL);

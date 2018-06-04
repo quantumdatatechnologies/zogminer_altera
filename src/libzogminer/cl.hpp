@@ -1146,7 +1146,15 @@ static inline cl_int errHandler (
     cl_int err,
     const char * errStr = NULL) throw(Error)
 {
-    if (err != CL_SUCCESS) {
+    if (err == CL_INVALID_PLATFORM) {
+	throw Error(err, "invalid platform");
+    } else if (err == CL_INVALID_DEVICE_TYPE) {
+        throw Error(err, "invalid device type");
+    } else if (err == CL_INVALID_VALUE) {
+	throw Error(err, "invalid value");
+    } else if (err == CL_DEVICE_NOT_FOUND) {
+	throw Error(err, "device not found");
+    } else if (err != CL_SUCCESS) {
         throw Error(err, errStr);
     }
     return err;

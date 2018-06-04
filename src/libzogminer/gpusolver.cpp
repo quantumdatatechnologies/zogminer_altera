@@ -58,7 +58,7 @@ GPUSolver::GPUSolver(unsigned platformId, unsigned selGPU) {
 
 	//TODO This looks like IND_PER_BUCKET, enough for GPU?
 	size_t global_work_size = 1 << 20;
-    size_t local_work_size = 32;
+    	size_t local_work_size = 32;
 
 	miner = new cl_zogminer();
 
@@ -73,8 +73,8 @@ GPUSolver::GPUSolver(unsigned platformId, unsigned selGPU) {
 	@params: unsigned globalWorkSizes
 	*/
 	GPU = miner->configureGPU(platformId, local_work_size, global_work_size);
-	if(!GPU)
-		std::cout << "ERROR: No suitable GPU found! No work will be performed!" << std::endl;
+	/*if(!GPU)
+		std::cout << "ERROR: No suitable GPU found! No work will be performed!" << std::endl;*/
 
 	/*Initialize the kernel, compile it and create buffers
 	Currently runs for the gpu-list-gen.c kernel DATA_SIZE=100 times
@@ -84,7 +84,7 @@ GPUSolver::GPUSolver(unsigned platformId, unsigned selGPU) {
 	@params: string& _kernel - The name of the kernel for dev purposes
 	*/
 	std::vector<std::string> kernels {"kernel_init_ht", "kernel_round0", "kernel_round1", "kernel_round2","kernel_round3", "kernel_round4", "kernel_round5", "kernel_round6", "kernel_round7", "kernel_round8", "kernel_sols"};
-	if(GPU)
+	if (true) //(GPU)
 		initOK = miner->init(platformId, selGPU, kernels);
 
 }

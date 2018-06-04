@@ -563,7 +563,7 @@ void equihash_round(uint round, __global char *ht_src, __global char *ht_dst,
 	__global uint *debug)
 {
     uint                tid = get_global_id(0);
-    uint		tlid = get_local_id(0);
+    uint		tlid = get_local_id(0); 
     __global char       *p;
     uint                cnt;
     uchar		first_words[NR_SLOTS];

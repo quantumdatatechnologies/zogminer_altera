@@ -721,7 +721,7 @@ AC_CHECK_HEADER([libsnark/gadgetlib1/gadget.hpp],,AC_MSG_ERROR(libsnark headers 
 AC_CHECK_LIB([snark],[main],LIBSNARK_LIBS=-lsnark, [AC_MSG_ERROR(libsnark missing)], [-lgmpxx])
 
 LIBZCASH_LIBS="-lsnark -lgmp -lgmpxx -lboost_system-mt -lssl -lcrypto -lsodium -fopenmp"
-LIBZOGMINER_LIBS="-lOpenCL"
+LIBZOGMINER_LIBS="-lalteracl"
 
 CXXFLAGS_TEMP="$CXXFLAGS"
 LIBS_TEMP="$LIBS"
